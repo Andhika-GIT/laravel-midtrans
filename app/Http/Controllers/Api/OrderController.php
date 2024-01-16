@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class OrderController extends Controller
 {
@@ -49,5 +50,28 @@ class OrderController extends Controller
         return response()->json([
             'token' => $snapToken
         ]);
+    }
+
+    public function callback(Request $request)
+    {
+        // take the server key env
+        $serverKey = config("midtrans.server_key");
+
+        // hash the order_id,status_code,gross_amount,ServerKey from midtrans, into one string as SHA512
+        $hashed = hash("sha512", $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
+
+        // check if hashed is the same as signature key request from midtrans
+        if ($hashed == $request->signature_key) {
+            // check the transaction status from midtrans request
+
+            // if captured, means the payment is sucessful
+            if ($request->transaction_status == "capture") {
+                // find the order in our database based on order_id request from midtrans
+                $order = Order::find($request->order_id);
+
+                // upddate the status to Paid
+                $order->update(['status' => 'paid']);
+            }
+        }
     }
 }
