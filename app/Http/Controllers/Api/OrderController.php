@@ -48,7 +48,8 @@ class OrderController extends Controller
         $snapToken = \Midtrans\Snap::getSnapToken($params);
 
         return response()->json([
-            'token' => $snapToken
+            'token' => $snapToken,
+            'orderId' => $order->id,
         ]);
     }
 
@@ -73,5 +74,12 @@ class OrderController extends Controller
                 $order->update(['status' => 'paid']);
             }
         }
+    }
+
+    public function invoice(Order $order)
+    {
+        return response()->json([
+            'order' => $order
+        ]);
     }
 }

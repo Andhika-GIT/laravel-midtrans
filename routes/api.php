@@ -21,3 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/checkout', [OrderController::class, 'checkout']);
 Route::post('/midtrans-callback', [OrderController::class, 'callback']);
+Route::post('/invoice/{order}', [OrderController::class, 'invoice']);
