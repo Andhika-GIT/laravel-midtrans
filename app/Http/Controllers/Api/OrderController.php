@@ -40,7 +40,8 @@ class OrderController extends Controller
                 'gross_amount' => $order->total_price,
             ),
             'customer_details' => array(
-                'name' => $request->name,
+                'first_name' => $request->name,
+                'last_name' => 'user',
                 'phone' => $request->phone,
             ),
         );
