@@ -67,7 +67,7 @@ class OrderController extends Controller
             // check the transaction status from midtrans request
 
             // if captured, means the payment is sucessful
-            if ($request->transaction_status == "capture") {
+            if ($request->transaction_status == "capture" or $request->transaction_status == "settlement") {
                 // find the order in our database based on order_id request from midtrans
                 $order = Order::find($request->order_id);
 
